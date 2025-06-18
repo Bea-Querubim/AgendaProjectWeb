@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const userRouter = require('./userRouter');
+const eventRouter = require('./eventsRouter');
 
-router.get('/', (require, response)=>{
-  response.status(200).send("rodando... Rota principal");
-});
+router.use(userRouter,eventRouter);
 
 module.exports = router;

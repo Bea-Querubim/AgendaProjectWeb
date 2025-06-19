@@ -1,19 +1,25 @@
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/configDatabase');
-
-class Evento extends Model {
-  static associate(models) {
-    /*
-    Eventos.belongsToMany(models.Usuario, {
-      through: 'EventoParticipantes',
-      foreignKey: 'eventoId',
-      otherKey: 'email',
-      onDelete: 'CASCADE'
-    });*/
-  };
-}
-Evento.init(
-  {
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class eventoModel extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      eventoModel.belongsToMany(models.usuarioModel, {
+        through: 'eventoParticipantesModel',
+        foreignKey: 'eventoId',
+        otherKey: 'email',
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE'
+      });
+    }
+  }
+  eventoModel.init({
     eventoId: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -28,16 +34,22 @@ Evento.init(
     organizador: {
       type: DataTypes.STRING,
       allowNull: false,
+      references:{
+        model: 'usuarioModel',
+        key: 'email'
+      },
+     onUpdate: 'CASCADE',
+     onDelete: 'CASCADE'
     },
     descricao: DataTypes.STRING,
     tipoEvento: {
       type: DataTypes.ENUM,
-      values: ['publico','privado'],
+      values: ['publico', 'privado', 'academico'],
       allowNull: false
     },
     tipoLocal: {
       type: DataTypes.ENUM,
-      values: ['1- Presencial','2- Online'],
+      values: ['1- Presencial', '2- Online'],
       allowNull: false
     },
     endereco: DataTypes.STRING,
@@ -64,12 +76,10 @@ Evento.init(
         this.setDataValue('participantes', JSON.stringify(value));
       }
     }
-  },
-  {
+  }, {
     sequelize,
-    modelName: 'Evento',
+    modelName: 'eventoModel',
     timestamps: false
-  }
-);
-
-module.exports = Evento;
+  });
+  return eventoModel;
+};

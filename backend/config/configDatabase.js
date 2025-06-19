@@ -1,4 +1,4 @@
-require("dotenv").config();
+/*require("dotenv").config();
 
 const Sequelize = require('sequelize');
 
@@ -9,8 +9,8 @@ const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_
 });
 
 
-module.exports = sequelize;
-/*
+module.exports = sequelize;*/
+
 require("dotenv").config();
 
 const Sequelize = require('sequelize');
@@ -35,4 +35,4 @@ if (process.env.DATABASE_TYPE === 'sqlite') {
   }).catch(console.error);
 }
 
-module.exports = sequelize;*/
+module.exports = sequelize;

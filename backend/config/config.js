@@ -1,8 +1,6 @@
 const sequelize = require('sequelize');
 require('dotenv').config();
 
-sequelize.query('PRAGMA foreign_keys = ON;');
-
 module.exports = {
   development: {
     dialect: 'sqlite',

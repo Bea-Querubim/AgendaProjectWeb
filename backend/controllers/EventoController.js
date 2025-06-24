@@ -11,7 +11,7 @@ const postEventAsync = async (request, response) => {
 
   } catch (e) {
     console.error('Erro real:', e);
-    return response.status(400).send({mensagem: "Erro: Evento já cadastrado ou Campos obrigatórios ausentes/invalidos"});
+    return response.status(400).json({mensagem: "Erro: Evento já cadastrado ou Campos obrigatórios ausentes/invalidos"});
   };
 };
 
@@ -20,7 +20,7 @@ const getAllEventsAsync = async (request, response) => {
     const Events = await service.listAllEvents();
     return response.status(200).send(reorderData(Events));
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(404).json({mensagem: `Erro: ${e.message}`});
   }
 };
 
@@ -31,7 +31,7 @@ const getAllEventsByUserAsync = async (request, response) => {
     //const Events = await service.listAllEventsByOrganizer(request.params.email);
     return response.status(200).send(reorderData(Events));
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(404).json({mensagem: `Erro: ${e.message}`});
   }
 };
 
@@ -40,7 +40,7 @@ const getAEventByIdAsync = async (request, response) => {
     let Event = await service.listOneEvent(request.params.id);
     return response.status(200).send(reorderData(Event));
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(404).json({mensagem: `Erro: ${e.message}`});
   }
 };
 
@@ -57,16 +57,16 @@ const putEventInfoAsync = async (request, response) => {
 
     return response.status(201).send(reorderData(alterEvent));
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(404).json({mensagem: `Erro: ${e.message}`});
   }
 };
 
 const deleteAEventAsync = async (request, response) => {
   try {
     const isDelete = await service.deleteEvent(request.params.id);
-    if (isDelete) return response.status(201).send({mensagem: "Evento excluído com sucesso!"});
+    if (isDelete) return response.status(201).json({mensagem: "Evento excluído com sucesso!"});
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(404).json({mensagem: `Erro: ${e.message}`});
   }
 };
 

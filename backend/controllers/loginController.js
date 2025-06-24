@@ -14,7 +14,7 @@ const loginUserAsync = async (require, response) => {
     return response.status(200).json({ mensagem: 'Login realizado com sucesso', user });
   }
   catch(e){
-    return response.status(500).send(`erro: ${e.message}`);
+    return response.status(500).json(`erro: ${e.message}`);
   }
 };
 

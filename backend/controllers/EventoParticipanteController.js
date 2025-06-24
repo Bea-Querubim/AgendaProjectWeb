@@ -12,9 +12,9 @@ const inviteUserAsync = async (request, response) => {
     await serviceEvents.inviteUserToAEvent(idEvent, compileGuests, guestsToLink);
 
 
-    return response.status(200).send({mensagem: "Usuário(s) convidado com sucesso!"});
+    return response.status(200).json({mensagem: "Usuário(s) convidado com sucesso!"});
   } catch (e) {
-    return response.status(400).send({mensagem: `Erro: ${e.message}`});
+    return response.status(400).json({mensagem: `Erro: ${e.message}`});
   }
 };
 

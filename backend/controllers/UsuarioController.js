@@ -7,7 +7,7 @@ const postUserAsync = async (request, response) => {
     }
     );
   } catch (e) {
-    return response.status(400).send({mensagem: "Erro: Usuario já cadastrado ou campos inválidos"});
+    return response.status(400).json({mensagem: "Erro: Usuario já cadastrado ou campos inválidos"});
   };
 
   /* await service.criarUsuario(request.body).then(() => {
@@ -22,7 +22,7 @@ const getAllUsersAsync = async (request, response) => {
     const users = await service.listAllUsers();
     return response.status(200).send(users);
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(404).json({mensagem: `Erro: ${e.message}`});
   }
 };
 

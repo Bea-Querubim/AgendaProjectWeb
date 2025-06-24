@@ -7,6 +7,7 @@ router.get('/usuarios', controller.getAllUsersAsync);
 router.get('/usuarios/:id', controller.getAUserAsync);
 router.put('/usuarios/:id', controller.putDataInfoAsync);
 router.delete('/usuarios/:id',controller.deleteAUserAsync);
+
 /*
 router.post('/usuarios', (request, response)=>{
   Usuarios.create(request.body).then(()=>{

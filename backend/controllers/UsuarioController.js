@@ -7,7 +7,7 @@ const postUserAsync = async (request, response) => {
     }
     );
   } catch (e) {
-    return response.status(400).send("erro: Usuario já cadastrado ou campos inválidos");
+    return response.status(400).send({mensagem: "Erro: Usuario já cadastrado ou campos inválidos"});
   };
 
   /* await service.criarUsuario(request.body).then(() => {
@@ -22,7 +22,7 @@ const getAllUsersAsync = async (request, response) => {
     const users = await service.listAllUsers();
     return response.status(200).send(users);
   } catch (e) {
-    return response.status(404).send(`${e.message}`);
+    return response.status(404).send({mensagem: `Erro: ${e.message}`});
   }
 };
 
@@ -37,7 +37,7 @@ const getAUserAsync = async (request, response) => {
     let user = await service.listOneUser(request.params.id);
     return response.status(200).send(user);
   } catch (e) {
-    return response.status(404).send(`${e.message}`);
+    return response.status(404).send({mensagem: `Erro: ${e.message}`});
   }
 };
 
@@ -46,7 +46,7 @@ const putDataInfoAsync = async (request, response) => {
     let alterUser = await service.alterUserInfo(request.params.id, request.body);
     return response.status(201).send(alterUser);
   } catch (e) {
-    return response.status(404).send(`${e.message}`);
+    return response.status(404).send({mensagem: `Erro: ${e.message}`});
   }
 };
   /*const user = await Usuarios.findOne({ where: { email: request.params.id } });
@@ -75,10 +75,10 @@ const putDataInfoAsync = async (request, response) => {
 const deleteAUserAsync = async (request, response) => {
   try{
     const isDelete = await service.deleteUser(request.params.id);
-    if(isDelete) return response.status(201).send("Usuário excluído com sucesso!");
+    if(isDelete) return response.status(201).send({mensagem: "Usuário excluído com sucesso!"});
 
   }catch(e){
-    return response.status(404).send(`Erro: ${e.message}`);
+    return response.status(404).send({mensagem: `erro: ${e.message}`});
   }
 };/*const user = await getAEspecificUserAsync();
   const user = await Usuarios.findByPk(request.params.id);

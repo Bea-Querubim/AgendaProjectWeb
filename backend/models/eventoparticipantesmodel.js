@@ -36,10 +36,16 @@ module.exports = (sequelize, DataTypes) => {
       },
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE'
-    }
+    },
+    tipo: {
+    type: DataTypes.ENUM,
+    values: ['organizador', 'participante'],
+    allowNull: false
+  }
   }, {
     sequelize,
     modelName: 'eventoParticipantesModel',
+    tableName: 'eventoParticipantesModel',
     timestamps: false
   });
   return eventoParticipantesModel;

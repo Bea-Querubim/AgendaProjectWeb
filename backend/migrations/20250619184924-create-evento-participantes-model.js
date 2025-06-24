@@ -22,6 +22,11 @@ module.exports = {
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
+      },
+      tipo: {
+      type: Sequelize.ENUM,
+      values: ['organizador', 'participante'],
+      allowNull: false
       }
     },
       {

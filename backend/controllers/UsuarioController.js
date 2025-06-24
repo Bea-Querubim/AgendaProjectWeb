@@ -22,7 +22,7 @@ const getAllUsersAsync = async (request, response) => {
     const users = await service.listAllUsers();
     return response.status(200).send(users);
   } catch (e) {
-    return response.status(404).send(`erro: Nenhum usuário encontrado, ${e.message}`);
+    return response.status(404).send(`${e.message}`);
   }
 };
 
@@ -37,7 +37,7 @@ const getAUserAsync = async (request, response) => {
     let user = await service.listOneUser(request.params.id);
     return response.status(200).send(user);
   } catch (e) {
-    return response.status(404).send(`erro: Usuário não encontrado/existe, ${e.message}`);
+    return response.status(404).send(`${e.message}`);
   }
 };
 
@@ -46,7 +46,7 @@ const putDataInfoAsync = async (request, response) => {
     let alterUser = await service.alterUserInfo(request.params.id, request.body);
     return response.status(201).send(alterUser);
   } catch (e) {
-    return response.status(404).send(`erro: Não foi possive alterar dados, ${e.message}`);
+    return response.status(404).send(`${e.message}`);
   }
 };
   /*const user = await Usuarios.findOne({ where: { email: request.params.id } });

@@ -1,12 +1,16 @@
-const service = require('../services/EventosServices');
+const service = require('../services/EventosServices')
+const serviceEvPart = require('../services/EventoParticipantesService')
+//const serviceNotification = require('./services/NotificationService')
 
-const postEventAsync = async(request, response) => {
+const { reorderData } = require('../utils/reorderDataEvents');
+
+const postEventAsync = async (request, response) => {
   try {
-    await service.createEvent(request.body).then(() => {
-      return response.status(201).send();
-    }
-    );
+    await service.createEvent(request.body);
+    return response.status(201).send();
+
   } catch (e) {
+    console.error('Erro real:', e);
     return response.status(400).send("erro: Evento já cadastrado ou Campos obrigatórios ausentes/inválidos");
   };
 };
@@ -14,45 +18,54 @@ const postEventAsync = async(request, response) => {
 const getAllEventsAsync = async (request, response) => {
   try {
     const Events = await service.listAllEvents();
-    return response.status(200).send(Events);
+    return response.status(200).send(reorderData(Events));
   } catch (e) {
-    return response.status(404).send(`erro: Nenhum Evento encontrado, ${e.message}`);
+    return response.status(404).send(`${e.message}`);
   }
 };
 
-const getAllEventsByOrganizerAsync = async (request, response) => {
+const getAllEventsByUserAsync = async (request, response) => {
   try {
-    const Events = await service.listAllEventsByOrganizer(request.params.email);
-    return response.status(200).send(Events);
+    const role = request.query.role || null;
+    const Events = role == null ? await service.listAllEventsByOrganizer(request.params.email) : await serviceEvPart.listAllEventsByRole(request.params.email);
+    //const Events = await service.listAllEventsByOrganizer(request.params.email);
+    return response.status(200).send(reorderData(Events));
   } catch (e) {
-    return response.status(404).send(`erro: Nenhum Evento encontrado, ${e.message}`);
+    return response.status(404).send(`${e.message}`);
   }
 };
 
 const getAEventByIdAsync = async (request, response) => {
   try {
     let Event = await service.listOneEvent(request.params.id);
-    return response.status(200).send(Event);
+    return response.status(200).send(reorderData(Event));
   } catch (e) {
-    return response.status(404).send(`erro: Evento não encontrado/existe, ${e.message}`);
+    return response.status(404).send(`${e.message}`);
   }
 };
 
 const putEventInfoAsync = async (request, response) => {
   try {
+    //console.log(request.params.id, request.body);
     let alterEvent = await service.alterEventInfo(request.params.id, request.body);
-    return response.status(201).send(alterEvent);
+
+    //if (request.body.hasOwnProperty['participantes'] && Array.isArray(request.body.participantes.legth > 0)) await serviceNotification.sendInvitationEmails(request.body.participantes);
+    const isParticipante = request.body.hasOwnProperty('participantes');
+    console.log('isParticipante: ', isParticipante);
+
+    if(isParticipante) await serviceEvPart.processUserLinks(alterEvent.id, {participantes: request.body.participantes});
+
+    return response.status(201).send(reorderData(alterEvent));
   } catch (e) {
-    return response.status(404).send(`erro: Não foi possive alterar dados, ${e.message}`);
+    return response.status(404).send(`${e.message}`);
   }
 };
 
-const deleteAEventAsync= async (request, response) => {
-  try{
+const deleteAEventAsync = async (request, response) => {
+  try {
     const isDelete = await service.deleteEvent(request.params.id);
-    if(isDelete) return response.status(201).send("Evento excluído com sucesso!");
-
-  }catch(e){
+    if (isDelete) return response.status(201).send("Evento excluído com sucesso!");
+  } catch (e) {
     return response.status(404).send(`Erro: ${e.message}`);
   }
 };
@@ -61,7 +74,7 @@ module.exports = {
   postEventAsync,
   getAllEventsAsync,
   getAEventByIdAsync,
-  getAllEventsByOrganizerAsync,
+  getAllEventsByUserAsync,
   putEventInfoAsync,
   deleteAEventAsync
 };

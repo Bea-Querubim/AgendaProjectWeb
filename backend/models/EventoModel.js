@@ -13,14 +13,14 @@ module.exports = (sequelize, DataTypes) => {
       eventoModel.belongsToMany(models.usuarioModel, {
         through: 'eventoParticipantesModel',
         foreignKey: 'eventoId',
-        otherKey: 'email',
+        otherKey: 'usuarioEmail',
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
       });
     }
   }
   eventoModel.init({
-    eventoId: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
@@ -79,6 +79,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'eventoModel',
+    tableName: 'eventoModel',
     timestamps: false
   });
   return eventoModel;

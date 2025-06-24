@@ -4,7 +4,6 @@ const serviceUserEvent = require('../services/EventoParticipantesService');
 
 //const serviceNotification = require('../services/NotificationService')
 
-
 const inviteUserAsync = async (request, response) => {
   try {
     const idEvent = request.params.id;
@@ -13,9 +12,9 @@ const inviteUserAsync = async (request, response) => {
     await serviceEvents.inviteUserToAEvent(idEvent, compileGuests, guestsToLink);
 
 
-    return response.status(200).send("Usuário(s) convidado com sucesso!");
+    return response.status(200).send({mensagem: "Usuário(s) convidado com sucesso!"});
   } catch (e) {
-    return response.status(400).send(`Erro: ${e.message}`);
+    return response.status(400).send({mensagem: `Erro: ${e.message}`});
   }
 };
 

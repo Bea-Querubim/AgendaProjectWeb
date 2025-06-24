@@ -46,7 +46,7 @@ async function ensureUserExists(email) {
       nome: "Convidado",
       senha: "PENDING"
     }
-    
+
     await Usuario.create(data);
   }
 }

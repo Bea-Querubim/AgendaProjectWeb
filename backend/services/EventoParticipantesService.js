@@ -47,7 +47,7 @@ async function processUserLinks(eventId, guests) {
 async function listAllEventsByRole(email) {
   //suportar a bisca de eventos quando usuario é um participante ou organizador.
   const eventsByRole = await EvPart.findAll({ where: { emailUsuario: email } });
-  if (!eventsByRole) throw new Error(`Erro: Não há eventos vinculados a esse email: ${email}`);
+  if (!eventsByRole) throw new Error(`Não há eventos vinculados a esse email: ${email}`);
   return eventsByRole;
 }
 

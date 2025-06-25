@@ -1,44 +1,57 @@
 <template>
   <v-container>
-    <v-row>{{ data.value }}</v-row>
     <v-row>
-      <!-- Coluna do calendário -->
-      <v-col cols="12" md="8" class="mb-4">
+      <!-- Coluna principal -->
+      <v-col cols="12" md="8">
+        <h2 class="text-h5 mb-4">Minha Agenda</h2>
+        <p>Os eventos criados ou que você participa aparecerão ao lado.</p>
+        <br>
+        <v-divider horizontal />
+        <br>
         <v-select v-model="type" :items="types" label="Visualização" variant="outlined" hide-details dense />
-        <v-calendar expanded :model-value="[focus]" @update:model-value="val => onFocusChange(val[0])" :events="events"
-          :view-mode="type" color="primary" show-more>
+        <v-calendar expanded :model-value="[focus]" :view-mode="type" show-more>
+
           <template #event="{ event }">
             <v-tooltip activator="parent" location="top">
-              {{ event.title }}
+              {{ event.titulo }}
             </v-tooltip>
           </template>
         </v-calendar>
       </v-col>
 
-      <!-- Coluna lateral: date-picker e lista -->
-      <v-col cols="10" md="3">
-        <v-date-picker v-model="selectedDate" locale="pt-BR" :max="maxDate" :min="minDate" color="primary"
-          class="mb-4" />
+      <v-divider vertical />
 
-        <h3 class="text-h6 mb-2">Eventos em {{ selectedDateFormatted }}</h3>
+      <!-- Coluna lateral com eventos -->
+      <v-col cols="12" md="4">
+        <v-date-picker v-model="selectedDate" locale="pt-BR" :max="maxDate" :min="minDate" color="primary"/>
+        <v-alert v-if="error" type="error" class="mb-4">
+          {{ error }}
+        </v-alert>
 
-        <v-list v-if="filteredEvents.length">
-          <v-list-item v-for="(event, index) in filteredEvents" :key="index">
-            <v-list-item-icon>
-              <v-icon :color="event.color">mdi-circle</v-icon>
-            </v-list-item-icon>
+        <NuxtLink to="/criarEvento">
+          <v-btn color="primary" class="mb-4">+ Criar Evento</v-btn>
+        </NuxtLink>
+        <v-divider horizontal />
+        <br>
+        <h3 class="text-h6 mb-2">Eventos do Usuário</h3>
+
+        <v-list v-if="events.length">
+          <v-list-item v-for="(event, index) in events" :key="index">
             <v-list-item-content>
-              <v-list-item-title>{{ event.title }}</v-list-item-title>
+              <v-list-item-title class="font-weight-bold">
+                {{ event.titulo }}
+              </v-list-item-title>
               <v-list-item-subtitle>
-                {{ formatTime(event.start) }} - {{ formatTime(event.end) }}
+                {{ event.descricao }}
+              </v-list-item-subtitle>
+              <v-list-item-subtitle>
+                📅 {{ formatarData(event.data) }} às {{ event.horaInicial }}
               </v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
         </v-list>
 
-        <p v-else>Nenhum evento neste dia.</p>
-
-        <p v-if="error" style="color:red;">Erro: {{ error }}</p>
+        <p v-else>Nenhum evento encontrado.</p>
       </v-col>
     </v-row>
   </v-container>
@@ -47,54 +60,51 @@
 <script setup>
 definePageMeta({ middleware: ['auth'] })
 
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useAuth } from '~/composables/useAuth'
 
 const { user } = useAuth()
-
+const events = ref([])
+const error = ref(null)
 const selectedDate = ref(new Date().toISOString().split('T')[0])
 const focus = ref(selectedDate.value)
 const type = ref('month')
 const types = ['month', 'week', 'day']
-const events = ref([])
-const eventos = ref([])
-const error = ref(null)
 
 const minDate = '2020-01-01'
 const maxDate = '2030-12-31'
 
-// Atualiza eventos quando o email do usuário estiver disponível
-watch(
-  () => user.value?.email,
-  async (email) => {
-    if (!email) return
-    error.value = null
-    try {
-      const { data, error: fetchError } = await useFetch(`http://localhost:3030/usuario/${email}/eventos`)
-      eventos.value = data.value.data
 
-      if (fetchError.value) {
-        error.value = fetchError.value.message || 'Erro desconhecido ao buscar eventos'
-        return
-      }
-      if (data.value && Array.isArray(data.value.data)) {
-        events.value = data.value.data.map(e => {
-          const start = `${e.data}T${e.horaInicial}`
-          const end = calcularFim(e.data, e.horaInicial, e.duracao)
-          return {
-            title: e.titulo,
-            start,
-            end,
-            color: 'primary'
-          }
-        });
-      }
-    } catch (err) {
-      error.value = err.message
+onMounted(async () => {
+  if (!user.value?.email) {
+    error.value = 'Usuário não autenticado.'
+    return
+  }
+
+  try {
+    const { data, error: fetchError } = await useFetch(
+      `http://localhost:3030/usuario/${user.value.email}/eventos`
+    )
+
+    if (fetchError.value) {
+      error.value = fetchError.value.message
+      return
     }
-  },
-  { immediate: true }
-)
+
+    if (data.value && Array.isArray(data.value.data)) {
+      events.value = data.value.data
+    } else {
+      error.value = 'Formato inesperado da resposta da API.'
+    }
+  } catch (err) {
+    error.value = 'Erro na requisição: ' + err.message
+  }
+})
+
+function formatarData(dateStr) {
+  const date = new Date(dateStr)
+  return date.toLocaleDateString('pt-BR')
+}
 
 watch(selectedDate, (newDate) => {
   focus.value = newDate
@@ -113,6 +123,7 @@ const filteredEvents = computed(() => {
     const end = new Date(e.end)
     start.setHours(0, 0, 0, 0)
     end.setHours(0, 0, 0, 0)
+
     return sel >= start && sel <= end
   })
 })
@@ -138,9 +149,5 @@ function calcularFim(data, horaInicial, duracao) {
   inicio.setSeconds(s1 + (ds || 0))
 
   return inicio.toISOString()
-}
-
-function onFocusChange(val) {
-  focus.value = val
 }
 </script>

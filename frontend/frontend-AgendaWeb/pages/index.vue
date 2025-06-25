@@ -32,7 +32,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn :to="`/evento/${event.id}`" color="primary" variant="tonal">Ver Agenda</v-btn>
+            <v-btn :to="`/agenda`" color="primary" variant="tonal">Adicionar a minha Agenda</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -42,6 +42,8 @@
 
 <script setup>
 const eventos = ref([])
+const responseRaw = ref(null)
+
 
 onMounted(async () => {
   const { data } = await useFetch('http://localhost:3030/eventos?tipoEvento=publico')

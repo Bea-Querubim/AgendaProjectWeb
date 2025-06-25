@@ -69,7 +69,7 @@ const submitCadastro = async () => {
     sucesso.value = 'Cadastro realizado com sucesso!';
 
     login(data.usuario)
-    setTimeout(() => router.push('/home'), 1500);
+    setTimeout(() =>   navigateTo('/home'), 1500);
 
   } catch (err) {
     erro.value = err.message;

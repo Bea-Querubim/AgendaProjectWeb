@@ -8,7 +8,9 @@ const { dataIsValid } = require('../utils/validateData');
 const postEventAsync = async (request, response) => {
   try {
     const data = request.body;
-    if (!dataIsValid(data)) return response.status(400).json({ mensagem: "Erro: Campos invalidos/vazios" });
+    console.log('REQ BODY:', request.body)
+
+   // if (!dataIsValid(data)) return response.status(400).json({ mensagem: "Erro: Campos invalidos/vazios" });
 
     const Event = await service.createEvent(data);
     return response.status(201).json({data:reorderData(Event)});

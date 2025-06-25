@@ -58,7 +58,7 @@ const submitLogin = async () => {
 
     if (data.usuario) {
       login(data.usuario)
-      router.push('/home')
+        navigateTo('/home')
     } else {
       throw new Error('Usuário não retornado.')
     }

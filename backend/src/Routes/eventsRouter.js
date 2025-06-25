@@ -8,7 +8,6 @@ router.get('/eventos/:id', controllerEvents.getAEventByIdAsync);
 router.put('/eventos/:id', controllerEvents.putEventInfoAsync);
 router.delete('/eventos/:id', controllerEvents.deleteAEventAsync);
 
-
 /*(request, response)=>{
   /*response.status(200).send("rodando... Rota eventos...");
   Eventos.findAll().then(()=>{

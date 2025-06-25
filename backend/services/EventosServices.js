@@ -15,8 +15,10 @@ async function createEvent(data) {
   return event;
 };
 
-async function listAllEvents() {
-  const events = await Eventos.findAll();
+async function listAllEvents(filters = {}) {
+  const events = await Eventos.findAll({
+    where: filters
+  });
   if (!events) throw new Error("Não há Eventos");
   return events;
 };

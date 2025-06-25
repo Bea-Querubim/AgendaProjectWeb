@@ -1,20 +1,19 @@
 const service = require('../services/UsuarioServices');
+const { dataIsValid } = require('../utils/validateData');
 
 const loginUserAsync = async (require, response) => {
-
-  const { email, senha } = require.body;
-  console.log(email, senha);
-  if (!email || !senha) return response.status(400).json("Erro: Email/senha são obrigatrios");
+    const data = require.body;
+    if(!dataIsValid(data)) return response.status(400).json({mensagem: "Erro: Ccampos invalidos/vazios"});
 
   try {
-    const user = await service.listOneUser(email);
+    const user = await service.listOneUser(data.email);
 
-    const isEqualsPwd = user.senha === senha;
+    const isEqualsPwd = user.senha === data.senha;
     if (!isEqualsPwd) return response.status(401).json("Erro: Senha incorreta");
-    return response.status(200).json({ mensagem: 'Login realizado com sucesso', user });
+    return response.status(200).json({ mensagem: 'Login realizado com sucesso', usuario: {nome: user.nome, email: user.email, auth: true}});
   }
   catch(e){
-    return response.status(500).json(`erro: ${e.message}`);
+    return response.status(500).json(`Erro: ${e.message}`);
   }
 };
 

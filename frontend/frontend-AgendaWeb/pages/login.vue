@@ -7,29 +7,22 @@
           <v-card-text>
             <!-- section form login -->
             <v-form @submit.prevent="submitLogin" ref="form">
-              <v-text-field
-                v-model="email"
-                label="Email"
-                type="email"
-                required
-              />
-              <v-text-field
-                v-model="senha"
-                label="Senha"
-                type="password"
-                required
-              />
+              <v-text-field v-model="email" label="Email" type="email" required />
+              <v-text-field v-model="senha" label="Senha" type="password" required />
               <v-btn type="submit" color="primary" class="mt-4" block>
                 Entrar
               </v-btn>
-              <v-alert
-                v-if="erro"
-                type="error"
-                class="mt-2"
-              >
+              <!-- alert error -->
+              <v-alert v-if="erro" type="error" class="mt-2">
                 {{ erro }}
               </v-alert>
             </v-form>
+            <!-- opcao para ir para cadastro-->
+            <v-card-actions>
+              <v-btn text color="primary" @click="$router.push('/cadastro')">
+                Não possui conta? Cadastre-se!
+              </v-btn>
+            </v-card-actions>
           </v-card-text>
         </v-card>
       </v-col>
@@ -45,26 +38,32 @@ const email = ref('')
 const senha = ref('')
 const erro = ref('')
 const router = useRouter()
+const { login } = useAuth()
 
 const submitLogin = async () => {
   erro.value = ''
 
   try {
-    const response = await fetch('http://localhost:3030/api/login', {
+    const response = await fetch('http://localhost:3030/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ email: email.value, senha: senha.value })
     })
-
     const data = await response.json()
-    console.log(data)
     if (!response.ok) {
-      throw new Error(data.mensagem || 'Erro ao fazer login.')
+      throw new Error(data.mensagem || 'Erro desconhecido')
     }
 
-    router.push('/')
+    if (data.usuario) {
+      login(data.usuario)
+      router.push('/home')
+    } else {
+      throw new Error('Usuário não retornado.')
+    }
+
+
   } catch (err) {
     erro.value = err.message
   }

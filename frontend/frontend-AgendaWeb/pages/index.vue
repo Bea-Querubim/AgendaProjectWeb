@@ -1,35 +1,61 @@
 <template>
-  <!-- section (Banner) -->
-  <v-container class="text-center py-16">
-    <h1 class="text-h2 font-weight-bold mb-4">Organize seus Eventos com Facilidade!</h1>
-    <p class="text-subtitle-1 mb-6">
-      Controle sua agenda, crie eventos, convide participantes e visualize tudo de forma prática.
-    </p>
-    <v-btn color="primary" class="mr-4" to="/eventos">Ver Meus Eventos</v-btn>
-    <v-btn outlined color="primary" to="/agenda">Minha Agenda</v-btn>
-  </v-container>
+  <v-container>
+    <h2 class="text-h5 mb-4">Eventos Públicos</h2>
 
-  <!-- section cards -->
-  <v-container class="my-16">
     <v-row>
-      <v-col cols="12" md="4">
-        <v-card outlined>
-          <v-card-title>Criar Eventos</v-card-title>
-          <v-card-text>Cadastre eventos com detalhes personalizados.</v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card outlined>
-          <v-card-title>Convidar Participantes</v-card-title>
-          <v-card-text>Envie convites para usuários da plataforma.</v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="4">
-        <v-card outlined>
-          <v-card-title>Visualizar Agenda</v-card-title>
-          <v-card-text>Tenha uma visão clara dos seus compromissos.</v-card-text>
+      <v-col
+        v-for="event in eventos"
+        :key="event.id"
+        cols="12"
+        sm="6"
+        md="4"
+      >
+        <v-card>
+          <!-- Imagem do evento -->
+          <v-img
+            :src="`/uploads/${event.id}.jpg`"
+            height="200"
+            cover
+            class="rounded-t"
+            @error="onImageError"
+          />
+
+          <v-card-title>{{ event.titulo }}</v-card-title>
+
+          <v-card-subtitle>
+            {{ event.descricao }}
+          </v-card-subtitle>
+
+          <v-card-text>
+            <p><strong>Data:</strong> {{ formatDate(event.data) }}</p>
+            <p><strong>Hora:</strong> {{ event.horaInicial }}</p>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-btn :to="`/evento/${event.id}`" color="primary" variant="tonal">Ver Agenda</v-btn>
+          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
   </v-container>
 </template>
+
+<script setup>
+const eventos = ref([])
+
+onMounted(async () => {
+  const { data } = await useFetch('http://localhost:3030/eventos?tipoEvento=publico')
+  eventos.value = data.value.data
+})
+
+// Fallback se imagem não existir
+function onImageError(e) {
+  e.target.src = '/placeholder.jpg'
+}
+
+// Formata data para exibição
+function formatDate(dateStr) {
+  const d = new Date(dateStr)
+  return d.toLocaleDateString('pt-BR')
+}
+</script>

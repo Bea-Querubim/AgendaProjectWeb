@@ -5,21 +5,32 @@
         <v-card>
           <v-card-title class="headline">Cadastro</v-card-title>
           <v-card-text>
-            <!-- section form cadastro -->
             <v-form @submit.prevent="submitCadastro" ref="form">
-              <v-text-field v-model="nome" label="Nome" required />
+              <v-text-field v-model="nome" label="Nome Completo" required />
               <v-text-field v-model="email" label="Email" type="email" required />
               <v-text-field v-model="senha" label="Senha" type="password" required />
               <v-btn type="submit" color="primary" class="mt-4" block>
                 Cadastrar
               </v-btn>
+              <!-- alert error -->
+              <v-alert v-if="erro" type="error" class="mt-3">
+                {{ erro }}
+              </v-alert>
+
+              <!-- alert sucess -->
+              <v-alert v-if="sucesso" type="success" class="mt-3">
+                {{ sucesso }}
+              </v-alert>
+
             </v-form>
-          </v-card-text>
-          <v-card-actions>
+            <!-- opcao para ir para login-->
+            <v-card-actions>
             <v-btn text color="primary" @click="$router.push('/login')">
               Já tem conta? Faça login
             </v-btn>
           </v-card-actions>
+
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -33,27 +44,35 @@ import { useRouter } from 'vue-router'
 const nome = ref('')
 const email = ref('')
 const senha = ref('')
+const erro = ref('')
+const sucesso = ref('')
 const router = useRouter()
 const form = ref(null)
+const { login } = useAuth()
 
 
-async function submitCadastro() {
-  if (!form.value.validate()) return
+const submitCadastro = async () => {
+  erro.value = ''
+  sucesso.value = ''
+
+  if (!form.value.validate()) return;
 
   try {
     const response = await fetch('http://localhost:3030/usuarios', {
       method: 'POST',
       body: JSON.stringify({ nome: nome.value, email: email.value, senha: senha.value }),
       headers: { 'Content-Type': 'application/json' }
-    })
+    });
 
-    const data = await response.json()
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.mensagem || data);
+    sucesso.value = 'Cadastro realizado com sucesso!';
 
-    if (!response.ok) throw new Error(data.mensagem || data)
+    login(data.usuario)
+    setTimeout(() => router.push('/home'), 1500);
 
-    router.push('/')
   } catch (err) {
-    erro.value = err.message
+    erro.value = err.message;
   }
-}
+};
 </script>

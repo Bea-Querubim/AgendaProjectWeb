@@ -1,13 +1,17 @@
 const service = require('../services/UsuarioServices');
+const { dataIsValid } = require('../utils/validateData');
 
 const postUserAsync = async (request, response) => {
   try {
-    await service.createUser(request.body).then(() => {
-      return response.status(201).send();
-    }
-    );
+    const data = request.body;
+    console.log(data);
+    if(!dataIsValid(data)) return response.status(400).json({mensagem: "Erro: Ccampos invalidos/vazios"});
+
+    const user = await service.createUser(data);
+    return response.status(201).json({mensagem: 'Usuario criado com sucesso', usuario: user});
+
   } catch (e) {
-    return response.status(400).json({mensagem: "Erro: Usuario já cadastrado ou campos inválidos"});
+    return response.status(400).json({mensagem: "Erro: Usuario já cadastrado ou campos invalidos"});
   };
 
   /* await service.criarUsuario(request.body).then(() => {
@@ -20,7 +24,7 @@ const postUserAsync = async (request, response) => {
 const getAllUsersAsync = async (request, response) => {
   try {
     const users = await service.listAllUsers();
-    return response.status(200).send(users);
+    return response.status(200).json({ usuario: users});
   } catch (e) {
     return response.status(404).json({mensagem: `Erro: ${e.message}`});
   }
@@ -35,18 +39,18 @@ const getAllUsersAsync = async (request, response) => {
 const getAUserAsync = async (request, response) => {
   try {
     let user = await service.listOneUser(request.params.id);
-    return response.status(200).send(user);
+    return response.status(200).json({ usuario: user});
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(400).json({mensagem: `Erro: ${e.message}`});
   }
 };
 
 const putDataInfoAsync = async (request, response) => {
   try {
     let alterUser = await service.alterUserInfo(request.params.id, request.body);
-    return response.status(201).send(alterUser);
+    return response.status(201).json({ usuario: alterUser});
   } catch (e) {
-    return response.status(404).send({mensagem: `Erro: ${e.message}`});
+    return response.status(400).json({mensagem: `Erro: ${e.message}`});
   }
 };
   /*const user = await Usuarios.findOne({ where: { email: request.params.id } });
@@ -75,10 +79,10 @@ const putDataInfoAsync = async (request, response) => {
 const deleteAUserAsync = async (request, response) => {
   try{
     const isDelete = await service.deleteUser(request.params.id);
-    if(isDelete) return response.status(201).send({mensagem: "Usuário excluído com sucesso!"});
+    if(isDelete) return response.status(201).json({mensagem: "Usuário excluído com sucesso!"});
 
   }catch(e){
-    return response.status(404).send({mensagem: `erro: ${e.message}`});
+    return response.status(400).json({mensagem: `erro: ${e.message}`});
   }
 };/*const user = await getAEspecificUserAsync();
   const user = await Usuarios.findByPk(request.params.id);

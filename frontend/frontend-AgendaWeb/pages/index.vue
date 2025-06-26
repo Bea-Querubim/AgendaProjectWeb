@@ -3,22 +3,10 @@
     <h2 class="text-h5 mb-4">Eventos Públicos</h2>
 
     <v-row>
-      <v-col
-        v-for="event in eventos"
-        :key="event.id"
-        cols="12"
-        sm="6"
-        md="4"
-      >
+      <v-col v-for="event in eventos" :key="event.id" cols="12" sm="6" md="4">
         <v-card>
           <!-- Imagem do evento -->
-          <v-img
-            :src="`/uploads/${event.id}.jpg`"
-            height="200"
-            cover
-            class="rounded-t"
-            @error="onImageError"
-          />
+          <v-img :src="`/uploads/${event.id}.jpg`" height="200" cover class="rounded-t" @error="onImageError" />
 
           <v-card-title>{{ event.titulo }}</v-card-title>
 
@@ -41,14 +29,14 @@
 </template>
 
 <script setup>
-const eventos = ref([])
-const responseRaw = ref(null)
+import { useFetch } from '#app'
 
+const { data, error } = await useFetch('http://localhost:3030/eventos?tipoEvento=publico')
 
-onMounted(async () => {
-  const { data } = await useFetch('http://localhost:3030/eventos?tipoEvento=publico')
-  eventos.value = data.value.data
-})
+if (error.value) {
+  console.error('Erro ao buscar eventos:', error.mensagem)
+}
+const eventos = computed(() => data.value?.data || [])
 
 // Fallback se imagem não existir
 function onImageError(e) {

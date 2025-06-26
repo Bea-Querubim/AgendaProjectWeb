@@ -23,7 +23,7 @@
 
       <!-- Coluna lateral com eventos -->
       <v-col cols="12" md="4">
-        <v-date-picker v-model="selectedDate" locale="pt-BR" :max="maxDate" :min="minDate" color="primary"/>
+        <v-date-picker v-model="selectedDate" locale="pt-BR" :max="maxDate" :min="minDate" color="primary" />
         <v-alert v-if="error" type="error" class="mb-4">
           {{ error }}
         </v-alert>

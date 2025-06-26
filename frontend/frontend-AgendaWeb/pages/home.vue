@@ -5,7 +5,7 @@
     <p class="text-subtitle-1 mb-6">
       Controle sua agenda, crie eventos, convide participantes e visualize tudo de forma prática.
     </p>
-    <v-btn color="primary" class="mr-4" to="/agenda">Ver Meus Eventos</v-btn>
+    <v-btn color="primary" class="mr-4" to="/eventos">Ver Meus Eventos</v-btn>
     <!--<v-btn outlined color="primary" to="/agenda">Minha Agenda</v-btn>-->
   </v-container>
 
@@ -25,6 +25,9 @@
         <v-card outlined>
           <v-card-title>Convidar Participantes</v-card-title>
           <v-card-text>Envie convites para usuários da plataforma.</v-card-text>
+          <NuxtLink to="/convidar">
+             <v-btn color="primary" class="mb-4">+ Enviar Convites</v-btn>
+          </NuxtLink>
         </v-card>
       </v-col>
       <v-col cols="12" md="4">

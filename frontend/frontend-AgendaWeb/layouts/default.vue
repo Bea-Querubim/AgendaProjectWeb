@@ -14,7 +14,7 @@
       <!-- exibe perfil e air caso o usuario esteja logado -->
       <template v-else>
         <v-btn text to="/home" tag="NuxtLink">Inicio</v-btn>
-        <!--<v-btn text to="/perfil" tag="NuxtLink">Ver Perfil</v-btn>-->
+        <v-btn text to="/perfil" tag="NuxtLink">Ver Perfil</v-btn>
         <v-btn text to="/agenda" tag="NuxtLink">Minha Agenda</v-btn>
         <v-btn text @click="logout">Sair</v-btn>
       </template>

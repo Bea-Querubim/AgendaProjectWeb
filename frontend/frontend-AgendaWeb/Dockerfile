@@ -13,8 +13,6 @@ RUN npm install
 COPY . .
 
 # Garante que o Nuxt leia o .env (Nuxt 3 usa `process.env`)
-# Se você usa `NUXT_PUBLIC_` prefixo, ele será exposto no client
-
 RUN npm run build
 
 # Etapa 2: produção

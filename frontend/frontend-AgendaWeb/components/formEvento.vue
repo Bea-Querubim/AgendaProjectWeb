@@ -57,11 +57,15 @@ const form = ref({
   duracao: '',
   participantes: ''
 })
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
 const submitEvento = async () => {
   erro.value = ''
   sucesso.value = false
   resposta.value = null
+
+
 
   try {
     const formatTime = (timeStr) => {
@@ -80,7 +84,7 @@ const submitEvento = async () => {
 
     console.log('Payload enviado:', payload)
 
-    const { data, error: fetchError } = await useFetch('http://localhost:3030/eventos', {
+    const { data, error: fetchError } = await useFetch(`${apiBase}/eventos`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

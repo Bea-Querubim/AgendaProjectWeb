@@ -18,6 +18,8 @@ import { useAuth } from '~/composables/useAuth'
 const { user } = useAuth()
 const responseRaw = ref(null)
 const error = ref(null)
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
 watch(
   () => user.value?.email,
@@ -25,7 +27,7 @@ watch(
     if (!email) return
 
     try {
-      const { data, error: fetchError } = await useFetch(`http://localhost:3030/usuario/${email}/eventos`)
+      const { data, error: fetchError } = await useFetch(`${apiBase}/usuario/${email}/eventos`)
 
       if (fetchError.value) {
         error.value = fetchError.value.message

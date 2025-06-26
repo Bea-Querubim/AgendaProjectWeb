@@ -49,7 +49,8 @@ const sucesso = ref('')
 const router = useRouter()
 const form = ref(null)
 const { login } = useAuth()
-
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
 const submitCadastro = async () => {
   erro.value = ''
@@ -58,7 +59,7 @@ const submitCadastro = async () => {
   if (!form.value.validate()) return;
 
   try {
-    const response = await fetch('http://localhost:3030/usuarios', {
+    const response = await fetch(`${apiBase}/usuarios`, {
       method: 'POST',
       body: JSON.stringify({ nome: nome.value, email: email.value, senha: senha.value }),
       headers: { 'Content-Type': 'application/json' }

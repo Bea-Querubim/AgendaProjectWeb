@@ -45,6 +45,9 @@ const { user } = useAuth()
 const eventos = ref([])
 const error = ref('')
 
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
+
 function onImageError(e) {
   e.target.src = '/placeholder.jpg'
 }
@@ -62,7 +65,7 @@ onMounted(async () => {
 
   try {
     const { data, error: fetchError } = await useFetch(
-      `http://localhost:3030/usuario/${user.value.email}/eventos`
+      `${apiBase}/usuario/${user.value.email}/eventos`
     )
 
     if (fetchError.value) {

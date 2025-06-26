@@ -37,14 +37,15 @@ import { useRouter } from 'vue-router'
 const email = ref('')
 const senha = ref('')
 const erro = ref('')
-const router = useRouter()
 const { login } = useAuth()
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
 const submitLogin = async () => {
   erro.value = ''
 
   try {
-    const response = await fetch('http://localhost:3030/login', {
+    const response = await fetch(`${apiBase}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

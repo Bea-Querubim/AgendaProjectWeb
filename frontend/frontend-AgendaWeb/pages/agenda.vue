@@ -74,6 +74,8 @@ const types = ['month', 'week', 'day']
 const minDate = '2020-01-01'
 const maxDate = '2030-12-31'
 
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
 onMounted(async () => {
   if (!user.value?.email) {
@@ -82,8 +84,7 @@ onMounted(async () => {
   }
 
   try {
-    const { data, error: fetchError } = await useFetch(
-      `http://localhost:3030/usuario/${user.value.email}/eventos`
+    const { data, error: fetchError } = await useFetch(`${apiBase}/eventos`
     )
 
     if (fetchError.value) {

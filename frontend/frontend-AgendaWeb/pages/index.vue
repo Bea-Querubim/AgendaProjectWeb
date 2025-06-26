@@ -30,8 +30,10 @@
 
 <script setup>
 import { useFetch } from '#app'
+const config = useRuntimeConfig()
+const apiBase = config.public.apiBase
 
-const { data, error } = await useFetch('http://localhost:3030/eventos?tipoEvento=publico')
+const { data, error } = await useFetch(`${apiBase}/eventos?tipoEvento=publico`)
 
 if (error.value) {
   console.error('Erro ao buscar eventos:', error.mensagem)

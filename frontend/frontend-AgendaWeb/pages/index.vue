@@ -3,22 +3,10 @@
     <h2 class="text-h5 mb-4">Eventos Públicos</h2>
 
     <v-row>
-      <v-col
-        v-for="event in eventos"
-        :key="event.id"
-        cols="12"
-        sm="6"
-        md="4"
-      >
+      <v-col v-for="event in eventos" :key="event.id" cols="12" sm="6" md="4">
         <v-card>
           <!-- Imagem do evento -->
-          <v-img
-            :src="`/uploads/${event.id}.jpg`"
-            height="200"
-            cover
-            class="rounded-t"
-            @error="onImageError"
-          />
+          <v-img :src="`/uploads/${event.id}.jpg`" height="200" cover class="rounded-t" @error="onImageError" />
 
           <v-card-title>{{ event.titulo }}</v-card-title>
 
@@ -32,7 +20,7 @@
           </v-card-text>
 
           <v-card-actions>
-            <v-btn :to="`/evento/${event.id}`" color="primary" variant="tonal">Ver Agenda</v-btn>
+            <v-btn :to="`/agenda`" color="primary" variant="tonal">Adicionar a minha Agenda</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -41,12 +29,14 @@
 </template>
 
 <script setup>
-const eventos = ref([])
+import { useFetch } from '#app'
 
-onMounted(async () => {
-  const { data } = await useFetch('http://localhost:3030/eventos?tipoEvento=publico')
-  eventos.value = data.value.data
-})
+const { data, error } = await useFetch('http://localhost:3030/eventos?tipoEvento=publico')
+
+if (error.value) {
+  console.error('Erro ao buscar eventos:', error.mensagem)
+}
+const eventos = computed(() => data.value?.data || [])
 
 // Fallback se imagem não existir
 function onImageError(e) {

@@ -3,6 +3,7 @@ const Eventos = db.eventoModel;
 const eventoParticipanteService = require('./EventoParticipantesService')
 
 async function createEvent(data) {
+  
   const event = await Eventos.create(data);
   if (!event) throw new Error("Não foi possivel criar o Evento");
 

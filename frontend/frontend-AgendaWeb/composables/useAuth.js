@@ -9,6 +9,7 @@ export const useAuth = () => {
   const logout = () => {
     user.value = null
     localStorage.removeItem('auth_user')
+    navigateTo('/')
   }
 
   // Recupera ao recarregar

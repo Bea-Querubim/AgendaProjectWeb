@@ -6,6 +6,7 @@
       <v-spacer />
       <!-- exibe login e cadastro caso o usuario nao esteja logado -->
       <template v-if="!user">
+        <v-btn text to="/" tag="NuxtLink">Inicio</v-btn>
         <v-btn text to="/login" tag="NuxtLink">Login</v-btn>
         <v-btn text to="/cadastro" tag="NuxtLink">Cadastro</v-btn>
       </template>

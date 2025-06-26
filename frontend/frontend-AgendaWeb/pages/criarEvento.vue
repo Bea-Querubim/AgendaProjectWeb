@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import FormEvento from '~/components/FormEvento.vue'
+import FormEvento from '~/components/formEvento.vue'
 
 definePageMeta({
   middleware: ['auth']

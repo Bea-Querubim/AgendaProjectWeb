@@ -63,7 +63,7 @@ npx sequelize db:seed:all
 npm run dev
 ```
 
-> O backend estará disponível em: [http://localhost:3030](http://localhost:3030)
+> O backend estará disponível em: [http://localhost:port que esta no seu .env ](http://localhost:)
 
 ---
 

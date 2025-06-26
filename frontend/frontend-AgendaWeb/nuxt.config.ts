@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   modules: ['vuetify-nuxt-module'],
   runtimeConfig: {
     public: {
-      apiBase: process.env.API_BASE || 'http://localhost:3030'
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:3030'
     }
   }
 }

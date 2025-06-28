@@ -1,33 +1,33 @@
-# Etapa 1: build
+# Etapa 1: Build do Nuxt
 FROM node:20 AS builder
 
 WORKDIR /app
 
-# Copia o package.json e package-lock.json (melhora cache)
+# Copia package.json e lock para cache eficiente
 COPY package*.json ./
-
-# Instala as dependências
 RUN npm install
 
-# Copia o restante do projeto, incluindo .env
+# Copia o restante do projeto
 COPY . .
 
-# Garante que o Nuxt leia o .env (Nuxt 3 usa `process.env`)
+# Gera a build do Nuxt
 RUN npm run build
 
-# Etapa 2: produção
+# Etapa 2: Imagem final de produção
 FROM node:20
 
 WORKDIR /app
 
-# Copia tudo da etapa de build
-COPY --from=builder /app ./
+# Copia apenas o necessário da build
+COPY --from=builder /app/.output ./.output
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
 
-# Instala só dependências de produção
-RUN npm install --omit=dev
+# Define variáveis de ambiente se quiser (opcional)
+# ENV NODE_ENV=production
 
-# Expõe a porta do Nuxt (3000)
+# Expõe a porta padrão do Nuxt Preview
 EXPOSE 3000
 
-# Roda Nuxt em preview (recomendado para SSR SSG híbrido)
-CMD ["npm", "run", "preview"]
+# Comando para rodar o app em produção (modo preview do Nuxt)
+CMD ["npx", "nuxt", "preview"]

@@ -14,14 +14,14 @@ services:
     command: npm start
     restart: unless-stopped
 
-  frontend:
+    frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    env_file:
-      - ./frontend/.env
+    environment:
+      - API_URL=http://backend:3030
     depends_on:
       - backend
     volumes:

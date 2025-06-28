@@ -16,7 +16,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./frontend/frontend-AgendaWeb
       dockerfile: Dockerfile
     ports:
       - "3000:3000"

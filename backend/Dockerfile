@@ -5,10 +5,12 @@ FROM node:20
 WORKDIR /app
 
 # Copia todos os arquivos da pasta para dentro do container
-COPY . .
+COPY package*.json ./
 
 # Instala dependências do projeto
 RUN npm install
+
+COPY . .
 
 # Executa as migrations para criar as tabelas no SQLite
 RUN npx sequelize-cli db:migrate

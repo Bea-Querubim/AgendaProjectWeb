@@ -9,14 +9,14 @@ services:
       - "3030:3030"
     env_file:
       - ./backend/.env
-    volumes:
-      - ./backend:/app
+    #volumes:
+     # - ./backend:/app
     command: npm start
     restart: unless-stopped
 
   frontend:
     build:
-      context: ./frontend/frontend-AgendaWeb
+      context: ./frontend/frontend/Agenda-Web
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
@@ -24,7 +24,5 @@ services:
       - API_URL=http://backend:3030
     depends_on:
       - backend
-    volumes:
-      - ./frontend:/app
-    command: npm run preview
     restart: unless-stopped
+

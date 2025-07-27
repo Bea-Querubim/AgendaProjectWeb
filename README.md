@@ -4,8 +4,8 @@
 Sistema web de gerenciamento de eventos, com backend em Node.js + Express + Sequelize e frontend em Nuxt 3 + Vuetify.
 
 Projeto feito pelas alunas: 
-- BP301634 - Beatriz Querubim Batista
-- BP3033295 - Thábata Cristine de Lima
+- [Beatriz Querubim Batista](https://github.com/Bea-Querubim)
+- [Thábata Cristine de Lima](https://github.com/St4rThabs)
 
 ---
 
